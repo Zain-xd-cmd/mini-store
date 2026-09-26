@@ -8,6 +8,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     ).LogTo(Console.WriteLine , LogLevel.Information);
 });
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 var app = builder.Build();
 
 app.MapControllers();

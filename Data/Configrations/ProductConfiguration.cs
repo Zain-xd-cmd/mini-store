@@ -18,6 +18,11 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         .HasColumnName("price")
         .HasPrecision(10,2)
         .IsRequired();
+         builder.Property(p=>p.Description)
+        .HasColumnName("description")
+        .HasMaxLength(255)
+        .IsRequired(false);
+        
 
         builder.Property(p=>p.Stock)
         .HasColumnName("stock")

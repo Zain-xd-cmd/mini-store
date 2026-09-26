@@ -3,58 +3,71 @@ using Microsoft.EntityFrameworkCore;
 
 [ApiController]
 [Route("api/products")]
-public class ProductController(AppDbContext context) : ControllerBase
+public class ProductController(IProductRepository productRepository) : ControllerBase
 {
     [HttpGet("")]
-    public async Task<IActionResult> Get([FromQuery]int price = 0,[FromQuery] string orderBy = "ASC")
+    public async Task<IActionResult> GetAll()
     {
+        var products = await productRepository.GetAllProductsAsync();
 
-        var products = context.Products.Where(p=>p.Price > price)
-        .Select(p=>new
-        {
-            p.Id,
-            p.Name,
-            p.Price
-        });
-        if(orderBy == "ASC")
-        {
-           products = products.OrderBy(p=>p.Price);
-        }
-        else
-        {
-           products =  products.OrderByDescending(p=>p.Price);
-        }
-        
-        var productsAsync = await products.ToListAsync();
-        return Ok(productsAsync);
+        return Ok(ProductResponse.FromListModel(products));
+
+       
     }
+
      [HttpGet("{id:int}")]
     public async Task<IActionResult> Get([FromRoute]int id)
     {
-        var product = await context.Products.FindAsync(id);
+        var product = await productRepository.GetProductByIdAsync(id);
         if(product is null)
         {
             return NotFound();
         }
 
        
-        return Ok(product);
+        return Ok(ProductResponse.FromModel(product));
     }
-     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery]string name = "")
+     
+     [HttpPost("")]
+    public async Task<IActionResult> Post([FromBody]ProductCreateRequest productBody)
     {
-        var products = await context.Products.Where(p=>p.Name.Contains(name)).ToListAsync();
+        var product = productBody.ToModel();
+        await productRepository.AddProductAsync(product);
         
+        return CreatedAtAction(
+          nameof(Get),
+          new { id = product.Id },
+          ProductResponse.FromModel(product)
+);
+    }
+     
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ProductUpdateRequest productBody)
+    {
+       var product = await productRepository.GetProductByIdAsync(id);
+       if(product is null)
+        {
+            return NotFound();
+        }
        
-        return Ok(products);
+         product = productBody.ToModel(product);
+         await productRepository.UpdateProductAsync(product);
+       
+        return Ok(ProductResponse.FromModel(product));
     }
 
-    [HttpGet("exists/{name}")]
-    public async Task<IActionResult> Exists(string name)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var product = await context.Products.AnyAsync(p=>p.Name==name);
-        
+       var product = await productRepository.GetProductByIdAsync(id);
+       if(product is null)
+        {
+            return NotFound();
+        }
        
-        return Ok(product);
+         await productRepository.DeleteProductAsync(product);
+       
+        return NoContent();
     }
 }

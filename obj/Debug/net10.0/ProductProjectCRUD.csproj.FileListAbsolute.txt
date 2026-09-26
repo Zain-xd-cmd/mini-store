@@ -322,3 +322,4 @@ C:\Users\zain\Desktop\.NET\Projects\Mini-store\obj\Debug\net10.0\refint\ProductP
 C:\Users\zain\Desktop\.NET\Projects\Mini-store\obj\Debug\net10.0\ProductProjectCRUD.pdb
 C:\Users\zain\Desktop\.NET\Projects\Mini-store\obj\Debug\net10.0\ProductProjectCRUD.genruntimeconfig.cache
 C:\Users\zain\Desktop\.NET\Projects\Mini-store\obj\Debug\net10.0\ref\ProductProjectCRUD.dll
+C:\Users\zain\Desktop\.NET\Projects\Mini-store\obj\Debug\net10.0\ProductProjectCRUD.sourcelink.json
