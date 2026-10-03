@@ -11,6 +11,7 @@ public class ProductResponse
     public string? Description { get; set; }
 
     public int CategoryId { get; set; }
+    
 
     public static ProductResponse FromModel(Product product)
     {

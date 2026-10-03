@@ -8,9 +8,20 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     ).LogTo(Console.WriteLine , LogLevel.Information);
 });
+
+
+//Exception Handler
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+
+//Model Validation
+
+
 var app = builder.Build();
 
+app.UseExceptionHandler();
 app.MapControllers();
 
 
